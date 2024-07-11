@@ -1,1 +1,1 @@
-## A realtime Chat Application built using React and Firebase v9
+## A realtime Chat Application built using React and Firebase
