@@ -1,19 +1,23 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import "./App.css";
 import { Auth } from "./components/Auth";
 import Cookies from "universal-cookie";
+import { Chat } from "./components/Chat";
 
 const cookies =  new Cookies();
 
 function App() {
 
   const [isAuth, setIsAuth] = useState(cookies.get("auth-token"));
+  {console.log(isAuth)}
   const [room, setRoom] = useState(null);
+
+  const roomInput = useRef(null);
 
   if(!isAuth){
     return (
       <div>
-        <Auth/>
+        <Auth setIsAuth={setIsAuth}/>
       </div>
     )
   }
@@ -21,14 +25,16 @@ function App() {
   return (
     <div>
       {room ? 
-        <div>Chat</div> 
+        <div>
+          <Chat/>
+        </div> 
         : 
         <div className="room">
           <label>Enter Room Name:</label>
-          <input/>
-          <button>Enter Chat</button>
+          <input ref={roomInput}/>
+          <button onClick={() => setRoom(roomInput.current.value)}>Enter Chat</button>
         </div>
-       }
+      }
     </div>
   )
 }
