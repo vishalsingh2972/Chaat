@@ -1,7 +1,7 @@
 //Sign in with Google page
-import { auth, provider } from "../config/firebase"
-import { signInWithPopup } from "firebase/auth"
-import Cookies from "universal-cookie"
+import { auth, provider } from "../config/firebase";
+import { signInWithPopup } from "firebase/auth";
+import Cookies from "universal-cookie";
 
 const cookies =  new Cookies();
 
@@ -18,7 +18,7 @@ export const Auth = () => {
     catch(error){
       console.error(error);
     }
-
+    
   }
 
   return(
