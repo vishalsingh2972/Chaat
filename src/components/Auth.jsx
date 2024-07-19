@@ -14,7 +14,7 @@ export const Auth = ({setIsAuth}) => {
     // console.log(result);
     // console.log(result.user.refreshToken);
 
-    cookies.set("auth-token", result.user.refreshToken); //for keeping user logged in even when he refreshes the page or opens a new tab etc., so we create a cookie and store the token in cookie so it remembers not to sign the user out
+    cookies.set("auth-token", result.user.refreshToken); //for keeping user logged in even when he refreshes the page or opens a new tab etc., so we create a cookie and store the token in cookie so it remembers not to sign the user out when we refresh the page and the component re-renders
     setIsAuth(true); //for page to redirect after login is done
     }
     catch(error){
