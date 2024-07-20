@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { addDoc, collection, serverTimestamp, onSnapshot, query, where } from "firebase/firestore"; //addDoc function is used to create and add new data to a collection in our Firestore database. Basically, it allows us to send new documents (rows of data) to our Firestore database. //addDoc helps us to add a document to our collection that we have already created in our firebase database
+import { addDoc, collection, serverTimestamp, onSnapshot, query, where, orderBy } from "firebase/firestore"; //addDoc function is used to create and add new data to a collection in our Firestore database. Basically, it allows us to send new documents (rows of data) to our Firestore database. //addDoc helps us to add a document to our collection that we have already created in our firebase database
 import { db, auth } from "../config/firebase";
-import "../styles/Chat.css"
+import "../styles/Chat.css";
 
 export const Chat = (props) => {
   const {room} = props;
@@ -13,14 +13,16 @@ export const Chat = (props) => {
   const messagesRef = collection(db, "messages");
   
   useEffect(() => {
-    const queryMessages = query(messagesRef, where("room", "==", room));
-    onSnapshot(queryMessages, (snapshot) => {
+    const queryMessages = query(messagesRef, where("room", "==", room), /*orderBy("created_at")*/);
+    const unsubscribe = onSnapshot(queryMessages, (snapshot) => {
       let messages = [];
       snapshot.forEach((doc) => {
         messages.push({...doc.data(), id: doc.id})  
       })
       setMessages(messages);
-    })  
+    })
+
+    return() => unsubscribe();
   },[])
 
   const handleSubmit = async (event) => {
@@ -38,14 +40,22 @@ export const Chat = (props) => {
       user: auth.currentUser.displayName,
       room: room
     });
-
     //make message text empty once message is sent
     setNewMessage("");
   }
 
   return (
     <div className="chat-app">
-      <div>{messages.map((message) => <h1>{message.text}</h1>)}</div>
+      <div className="header">Welcome to {room.toUpperCase()}</div>
+      <div className="messages">
+        {messages.map((message) => (
+          <div className="message" key={message.id}>
+            <span className="user">{message.user} :</span>
+            {message.text}
+          </div>
+          ))
+        }
+      </div>
       <form onSubmit={handleSubmit} className="new-message-form">
         <input 
           className="new-message-input" 
